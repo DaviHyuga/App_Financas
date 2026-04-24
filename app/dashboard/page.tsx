@@ -16,10 +16,13 @@ export default async function DashboardPage() {
     .eq('user_id', user.id)
     .order('date', { ascending: false })
 
+  const fullName: string = user.user_metadata?.full_name || user.email?.split('@')[0] || 'Usuario'
+
   return (
     <DashboardClient
       initialTransactions={transactions ?? []}
       userEmail={user.email ?? ''}
+      userName={fullName}
     />
   )
 }

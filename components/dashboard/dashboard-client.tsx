@@ -2,23 +2,27 @@
 
 import { useState, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
+import { useTheme } from 'next-themes'
 import { createClient } from '@/lib/supabase/client'
 import { Transaction } from '@/lib/types'
 import { SummaryCards } from './summary-cards'
 import { ExpenseChart } from './expense-chart'
+import { IncomeChart } from './income-chart'
 import { TransactionsTable } from './transactions-table'
 import { TransactionDialog } from '../transactions/transaction-dialog'
 import { TransactionFilters } from '../transactions/transaction-filters'
 import { Button } from '@/components/ui/button'
-import { Plus, LogOut, TrendingUp } from 'lucide-react'
+import { Plus, LogOut, TrendingUp, Sun, Moon } from 'lucide-react'
 
 interface DashboardClientProps {
   initialTransactions: Transaction[]
   userEmail: string
+  userName: string
 }
 
-export function DashboardClient({ initialTransactions, userEmail }: DashboardClientProps) {
+export function DashboardClient({ initialTransactions, userEmail, userName }: DashboardClientProps) {
   const router = useRouter()
+  const { theme, setTheme } = useTheme()
   const [transactions, setTransactions] = useState<Transaction[]>(initialTransactions)
   const [dialogOpen, setDialogOpen] = useState(false)
   const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null)
@@ -88,10 +92,15 @@ export function DashboardClient({ initialTransactions, userEmail }: DashboardCli
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <TrendingUp className="h-5 w-5 text-primary" />
-            <span className="font-bold text-lg">Financas Pessoais</span>
+            <span className="font-bold text-lg">Rotina Financeira do {userName}</span>
           </div>
           <div className="flex items-center gap-3">
             <span className="text-sm text-muted-foreground hidden sm:block">{userEmail}</span>
+            <Button variant="ghost" size="icon" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
+              <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+              <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+              <span className="sr-only">Alternar tema</span>
+            </Button>
             <Button variant="ghost" size="sm" onClick={handleLogout}>
               <LogOut className="h-4 w-4" />
               <span className="ml-1 hidden sm:inline">Sair</span>
@@ -104,10 +113,11 @@ export function DashboardClient({ initialTransactions, userEmail }: DashboardCli
         {/* Summary Cards */}
         <SummaryCards summary={summary} />
 
-        {/* Chart + Actions row */}
+        {/* Charts + Actions row */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-6">
             <ExpenseChart transactions={filteredTransactions} />
+            <IncomeChart transactions={filteredTransactions} />
           </div>
           <div className="flex flex-col gap-4">
             <Button

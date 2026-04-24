@@ -60,7 +60,7 @@ export function TransactionDialog({ open, onClose, onSaved, transaction }: Props
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    const amount = parseFloat(form.amount.replace(',', '.'))
+    const amount = parseFloat(form.amount.replace(/\./g, '').replace(',', '.'))
     if (isNaN(amount) || amount <= 0) {
       setError('Informe um valor valido maior que zero.')
       return
@@ -141,7 +141,7 @@ export function TransactionDialog({ open, onClose, onSaved, transaction }: Props
             <Input
               type="text"
               inputMode="decimal"
-              placeholder="0,00"
+              placeholder="0,00 ou 1.000,00"
               value={form.amount}
               onChange={(e) => setField('amount', e.target.value)}
               required

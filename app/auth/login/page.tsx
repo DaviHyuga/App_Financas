@@ -38,7 +38,7 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-muted/40 p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-bold">Financas Pessoais</CardTitle>
+          <CardTitle className="text-2xl font-bold">Rotina Financeira</CardTitle>
           <CardDescription>Entre na sua conta para continuar</CardDescription>
         </CardHeader>
         <form onSubmit={handleLogin}>
